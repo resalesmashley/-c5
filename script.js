@@ -3179,6 +3179,8 @@ const SHOP_PRODUCTS = [
         name: 'Snack Pack for 10',
         description: 'Juice boxes, pretzels, and fruit cups for a full classroom.',
         price: 14,
+        badge: 'Top pick',
+        image: 'https://images.unsplash.com/photo-1505253758473-96b7015fcd40?auto=format&fit=crop&w=800&q=80'
         badge: 'Top pick'
     },
     {
@@ -3186,6 +3188,8 @@ const SHOP_PRODUCTS = [
         name: 'Bible Story Craft Kit',
         description: 'Prepped supplies for 12 kids with step-by-step instructions.',
         price: 18,
+        badge: 'Ready to use',
+        image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80'
         badge: 'Ready to use'
     },
     {
@@ -3193,6 +3197,8 @@ const SHOP_PRODUCTS = [
         name: 'Volunteer T-Shirt',
         description: 'Soft cotton shirt with BCC logo. Unisex sizing.',
         price: 22,
+        badge: 'New',
+        image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80'
         badge: 'New'
     },
     {
@@ -3200,6 +3206,8 @@ const SHOP_PRODUCTS = [
         name: 'Name Badge Refill Pack',
         description: 'Includes 30 stickers and 10 reusable sleeves.',
         price: 9,
+        badge: 'Classroom essential',
+        image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80'
         badge: 'Classroom essential'
     },
     {
@@ -3207,6 +3215,8 @@ const SHOP_PRODUCTS = [
         name: 'Clean-Up Bundle',
         description: 'Disinfecting wipes, tissues, and hand sanitizer trio.',
         price: 12,
+        badge: 'Staff favorite',
+        image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80'
         badge: 'Staff favorite'
     }
 ];
@@ -3228,6 +3238,9 @@ function renderShopItems() {
         card.className = 'shop-card';
         card.innerHTML = `
             <div class="badge">${product.badge}</div>
+            <div class="shop-card-media">
+                <img src="${product.image}" alt="${product.name}" loading="lazy">
+            </div>
             <h4>${product.name}</h4>
             <p>${product.description}</p>
             <div class="price">${formatCurrency(product.price)}</div>
