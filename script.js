@@ -392,9 +392,9 @@ let currentSubcategories = [];
 
 // Page Navigation
 function showPage(pageName) {
-    const pageIds = ['home', 'about', 'staff', 'prek', 'elementary', 'events', 'volunteer', 
-                     'resources', 'gallery', 'portals', 'parent-portal', 'teacher-portal', 
-                     'contact', 'parent-dashboard', 'teacher-dashboard', 'lesson-plan-builder', 
+    const pageIds = ['home', 'about', 'staff', 'prek', 'elementary', 'events', 'volunteer',
+                     'shop', 'resources', 'gallery', 'portals', 'parent-portal', 'teacher-portal',
+                     'contact', 'parent-dashboard', 'teacher-dashboard', 'lesson-plan-builder',
                      'resource-library', 'teacher-messages', 'admin-dashboard'];
     
     pageIds.forEach(page => {
@@ -435,6 +435,7 @@ function showPage(pageName) {
         'teacher-messages': 'Messages',
         'admin-dashboard': 'Admin Control Center',
         'admin-parent-management': 'Parent Accounts',
+        'shop': 'Self-Serve Shop',
         'contact': 'Contact Us'
     };
 
@@ -3170,3 +3171,214 @@ function handleParentChatSubmit() {
         console.error('Chat submission failed:', error);
     });
 }
+
+// --- Self-service shop ---
+const SHOP_PRODUCTS = [
+    {
+        id: 'snack-pack',
+        name: 'Snack Pack for 10',
+        description: 'Juice boxes, pretzels, and fruit cups for a full classroom.',
+        price: 14,
+        badge: 'Top pick'
+    },
+    {
+        id: 'craft-kit',
+        name: 'Bible Story Craft Kit',
+        description: 'Prepped supplies for 12 kids with step-by-step instructions.',
+        price: 18,
+        badge: 'Ready to use'
+    },
+    {
+        id: 'volunteer-tee',
+        name: 'Volunteer T-Shirt',
+        description: 'Soft cotton shirt with BCC logo. Unisex sizing.',
+        price: 22,
+        badge: 'New'
+    },
+    {
+        id: 'name-badges',
+        name: 'Name Badge Refill Pack',
+        description: 'Includes 30 stickers and 10 reusable sleeves.',
+        price: 9,
+        badge: 'Classroom essential'
+    },
+    {
+        id: 'clean-up',
+        name: 'Clean-Up Bundle',
+        description: 'Disinfecting wipes, tissues, and hand sanitizer trio.',
+        price: 12,
+        badge: 'Staff favorite'
+    }
+];
+
+const SERVICE_FEE_RATE = 0.05;
+let cartState = {};
+
+function formatCurrency(value) {
+    return `$${value.toFixed(2)}`;
+}
+
+function renderShopItems() {
+    const container = document.getElementById('shop-items');
+    if (!container) return;
+
+    container.innerHTML = '';
+    SHOP_PRODUCTS.forEach(product => {
+        const card = document.createElement('article');
+        card.className = 'shop-card';
+        card.innerHTML = `
+            <div class="badge">${product.badge}</div>
+            <h4>${product.name}</h4>
+            <p>${product.description}</p>
+            <div class="price">${formatCurrency(product.price)}</div>
+            <button class="btn add-to-cart" data-product-id="${product.id}">Add to cart</button>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function renderCart() {
+    const cartContainer = document.getElementById('cart-items');
+    const countBadge = document.getElementById('cart-count');
+    const subtotalEl = document.getElementById('cart-subtotal');
+    const feeEl = document.getElementById('cart-fee');
+    const totalEl = document.getElementById('cart-total');
+
+    if (!cartContainer || !countBadge || !subtotalEl || !feeEl || !totalEl) return;
+
+    const entries = Object.values(cartState);
+    cartContainer.innerHTML = '';
+
+    if (!entries.length) {
+        cartContainer.innerHTML = '<p class="meta">Your cart is empty. Add supplies to get started.</p>';
+    } else {
+        entries.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'cart-item';
+            row.innerHTML = `
+                <div>
+                    <h5>${item.name}</h5>
+                    <p class="meta">${formatCurrency(item.price)} each</p>
+                </div>
+                <div class="cart-actions">
+                    <input type="number" min="1" class="quantity-input" data-qty-id="${item.id}" value="${item.quantity}">
+                    <button class="btn-secondary remove-from-cart" data-remove-id="${item.id}">Remove</button>
+                </div>
+            `;
+            cartContainer.appendChild(row);
+        });
+    }
+
+    countBadge.textContent = entries.reduce((sum, item) => sum + item.quantity, 0);
+
+    const subtotal = entries.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const fee = subtotal > 0 ? Math.max(1, subtotal * SERVICE_FEE_RATE) : 0;
+    const total = subtotal + fee;
+
+    subtotalEl.textContent = formatCurrency(subtotal);
+    feeEl.textContent = formatCurrency(fee);
+    totalEl.textContent = formatCurrency(total);
+}
+
+function addToCart(productId) {
+    const product = SHOP_PRODUCTS.find(item => item.id === productId);
+    if (!product) return;
+
+    const existing = cartState[productId];
+    cartState[productId] = {
+        ...product,
+        quantity: existing ? existing.quantity + 1 : 1
+    };
+
+    renderCart();
+    updatePaymentStatus('Added to cart.');
+}
+
+function updateQuantity(productId, newQuantity) {
+    const quantity = Math.max(1, Number(newQuantity) || 1);
+    if (cartState[productId]) {
+        cartState[productId].quantity = quantity;
+        renderCart();
+    }
+}
+
+function removeFromCart(productId) {
+    if (cartState[productId]) {
+        delete cartState[productId];
+        renderCart();
+    }
+}
+
+function updatePaymentStatus(message, isError = false) {
+    const statusEl = document.getElementById('payment-status');
+    if (!statusEl) return;
+    statusEl.textContent = message;
+    statusEl.style.color = isError ? '#b91c1c' : '#0f7173';
+}
+
+function handleMockCheckout() {
+    const checkoutBtn = document.getElementById('mock-checkout');
+    const hasItems = Object.keys(cartState).length > 0;
+
+    if (!hasItems) {
+        updatePaymentStatus('Add at least one item before checking out.', true);
+        return;
+    }
+
+    if (checkoutBtn) {
+        checkoutBtn.disabled = true;
+        checkoutBtn.textContent = 'Processing...';
+    }
+
+    updatePaymentStatus('Authorizing payment (mock)...');
+
+    setTimeout(() => {
+        cartState = {};
+        renderCart();
+        updatePaymentStatus('Payment approved! Your supplies will be ready for pick-up.');
+        if (checkoutBtn) {
+            checkoutBtn.disabled = false;
+            checkoutBtn.textContent = 'Pay securely (Mock)';
+        }
+    }, 800);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (!document.getElementById('shop-page')) return;
+
+    renderShopItems();
+    renderCart();
+
+    const shopContainer = document.getElementById('shop-items');
+    const cartContainer = document.getElementById('cart-items');
+    const checkoutBtn = document.getElementById('mock-checkout');
+
+    if (shopContainer) {
+        shopContainer.addEventListener('click', event => {
+            const productId = event.target.getAttribute('data-product-id');
+            if (productId) {
+                addToCart(productId);
+            }
+        });
+    }
+
+    if (cartContainer) {
+        cartContainer.addEventListener('input', event => {
+            const qtyId = event.target.getAttribute('data-qty-id');
+            if (qtyId) {
+                updateQuantity(qtyId, event.target.value);
+            }
+        });
+
+        cartContainer.addEventListener('click', event => {
+            const removeId = event.target.getAttribute('data-remove-id');
+            if (removeId) {
+                removeFromCart(removeId);
+            }
+        });
+    }
+
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', handleMockCheckout);
+    }
+});
