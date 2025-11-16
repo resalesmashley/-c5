@@ -3181,6 +3181,7 @@ const SHOP_PRODUCTS = [
         price: 14,
         badge: 'Top pick',
         image: 'https://images.unsplash.com/photo-1505253758473-96b7015fcd40?auto=format&fit=crop&w=800&q=80'
+        badge: 'Top pick'
     },
     {
         id: 'craft-kit',
@@ -3189,6 +3190,7 @@ const SHOP_PRODUCTS = [
         price: 18,
         badge: 'Ready to use',
         image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80'
+        badge: 'Ready to use'
     },
     {
         id: 'volunteer-tee',
@@ -3197,6 +3199,7 @@ const SHOP_PRODUCTS = [
         price: 22,
         badge: 'New',
         image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80'
+        badge: 'New'
     },
     {
         id: 'name-badges',
@@ -3205,6 +3208,7 @@ const SHOP_PRODUCTS = [
         price: 9,
         badge: 'Classroom essential',
         image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80'
+        badge: 'Classroom essential'
     },
     {
         id: 'clean-up',
@@ -3213,6 +3217,7 @@ const SHOP_PRODUCTS = [
         price: 12,
         badge: 'Staff favorite',
         image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80'
+        badge: 'Staff favorite'
     }
 ];
 
