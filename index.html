@@ -73,6 +73,7 @@
                         <li><a href="#" onclick="showPage('elementary'); return false;" id="nav-elementary">Elementary</a></li>
                         <li><a href="#" onclick="showPage('events'); return false;" id="nav-events">Events</a></li>
                         <li><a href="#" onclick="showPage('volunteer'); return false;" id="nav-volunteer">Volunteer</a></li>
+                        <li><a href="#" onclick="showPage('shop'); return false;" id="nav-shop">Self-Serve Shop</a></li>
                         <li><a href="#" onclick="showPage('resources'); return false;" id="nav-resources">Resources</a></li>
                         <li><a href="#" onclick="showPage('gallery'); return false;" id="nav-gallery">Gallery</a></li>
                         <li><a href="#" onclick="showPage('portals'); return false;" id="nav-portals">Portals</a></li>
@@ -265,6 +266,35 @@
                             <p>Children will assemble care packages for local families in need.</p>
                             <a href="#" class="btn register-btn" data-event-name="Thanksgiving Service Project">Register Now</a>
                         </div>
+                    </div>
+                </div>
+
+                <div id="shop-page" class="page-hidden">
+                    <div class="content-section">
+                        <h2>Self-Service Supply Shop</h2>
+                        <p>Order classroom snacks, craft kits, and volunteer gear with live cart updates and a fast mock checkout.</p>
+                    </div>
+                    <div class="shop-grid">
+                        <section class="shop-catalog">
+                            <div id="shop-items" class="shop-items" aria-live="polite"></div>
+                        </section>
+                        <aside class="shop-cart" aria-live="polite">
+                            <div class="cart-header">
+                                <div>
+                                    <p class="eyebrow">Your cart</p>
+                                    <h3>Ready to checkout</h3>
+                                </div>
+                                <span class="cart-count" id="cart-count">0</span>
+                            </div>
+                            <div id="cart-items" class="cart-items"></div>
+                            <div class="cart-summary">
+                                <div class="summary-row"><span>Subtotal</span><span id="cart-subtotal">$0.00</span></div>
+                                <div class="summary-row"><span>Service fee</span><span id="cart-fee">$0.00</span></div>
+                                <div class="summary-row total-row"><span>Total</span><span id="cart-total">$0.00</span></div>
+                                <button class="btn" id="mock-checkout">Pay securely (Mock)</button>
+                                <p id="payment-status" class="payment-status" role="status"></p>
+                            </div>
+                        </aside>
                     </div>
                 </div>
 
